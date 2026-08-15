@@ -2120,7 +2120,7 @@
 			<key>IOClass</key>
 			<string>RtWlanU</string>
 			<key>IOKitDebug</key>
-			<integer>65535</integer>
+			<integer>0</integer>
 			<key>IOProviderClass</key>
 			<string>IOUSBInterface</string>
 			<key>bConfigurationValue</key>
@@ -2139,7 +2139,7 @@
 			<key>IOClass</key>
 			<string>RtWlanU</string>
 			<key>IOKitDebug</key>
-			<integer>65535</integer>
+			<integer>0</integer>
 			<key>IOProviderClass</key>
 			<string>IOUSBInterface</string>
 			<key>bConfigurationValue</key>
