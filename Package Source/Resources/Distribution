@@ -5,9 +5,9 @@
     <domains enable_anywhere="true"/>
     <background file="background" alignment="center" scaling="tofit"/>
     <background-darkAqua file="background" alignment="center" scaling="tofit"/>
-    <welcome file="Welcome.rtfd"/>
-    <readme file="Support.rtfd"/>
-    <conclusion file="Conclusion.rtfd"/>
+    <welcome file="Welcome.html" mime-type="text/html"/>
+    <readme file="Support.html" mime-type="text/html"/>
+    <conclusion file="Conclusion.html" mime-type="text/html"/>
     <choices-outline>
         <line choice="choice41">
             <line choice="choice44"/>

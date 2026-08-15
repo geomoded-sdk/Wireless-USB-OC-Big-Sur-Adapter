@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Read Me</title>
+</head>
+<body style="font-family: Helvetica, Arial, sans-serif; font-size: 13px; margin: 20px;">
+<h2>Wireless USB OC BigSurAdapter V17</h2>
+<p><b>Requirements:</b> macOS Catalina or newer, OpenCore, SIP disabled (csrutil disable) and SecureBootModel set to Disabled.</p>
+<p><b>What gets installed:</b></p>
+<ul>
+<li>Status bar utility and helper into /Private/tmp (postinstall moves it into place)</li>
+<li>LaunchAgents: Wlan.Software.plist and LaunchDaemon: Wlan.SoftwareDaemon.plist</li>
+<li>Realtek kexts (RtWlanU, RtWlanU1827) copied to the ESP EFI/OC/Kexts folder and registered in config.plist Kernel &gt; Add</li>
+</ul>
+<p><b>Uninstall:</b> choose the Uninstaller choice in the installer; it also removes the RtWlanU entries from the ESP config.plist.</p>
+<p>Right-click the status bar icon and choose Enable/Disable or Open to control the adapter.</p>
+</body>
+</html>
