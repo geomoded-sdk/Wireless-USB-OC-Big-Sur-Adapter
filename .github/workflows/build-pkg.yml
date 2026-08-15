@@ -1,0 +1,75 @@
+name: Build macOS Installer Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "Package Source/**"
+      - ".github/workflows/build-pkg.yml"
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare payloads
+        run: |
+          set -euo pipefail
+          rm -rf work out product
+          mkdir -p work/statusbarapp/Private/tmp
+          cp "Package Source/StatusBarApp/StatusBarApp.zip" work/statusbarapp/Private/tmp/
+          cp "Package Source/StatusBarApp/RtWlanHelper" work/statusbarapp/Private/tmp/
+
+          mkdir -p work/agents/Library/LaunchAgents
+          cp "Package Source/agents/Wlan.Software.plist" work/agents/Library/LaunchAgents/
+
+          mkdir -p work/daemon/Library/LaunchDaemons
+          cp "Package Source/daemon/Wlan.SoftwareDaemon.plist" work/daemon/Library/LaunchDaemons/
+
+          mkdir -p work/efifolder/Private/tmp/EFI/EFI/OC/Kexts
+          cp -R "Package Source/Notarized Wireless USB OC Big Sur Adapter/drivers/RtWlanU.kext" work/efifolder/Private/tmp/EFI/EFI/OC/Kexts/
+          cp -R "Package Source/Notarized Wireless USB OC Big Sur Adapter/drivers/RtWlanU1827.kext" work/efifolder/Private/tmp/EFI/EFI/OC/Kexts/
+
+      - name: Build component packages
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          pkgbuild --root work/statusbarapp \
+            --scripts "Package Source/Scripts/script statusbarapp" \
+            --identifier com.109Driver.wirelessUsbocBigsuradapter.statusbarapp.pkg \
+            --version 1.0 --install-location / --auth root out/statusbarapp.pkg
+          pkgbuild --root work/agents \
+            --identifier com.109Driver.wirelessUsbocBigsuradapter.Agents.pkg \
+            --version 1.0 --install-location / --auth root out/agents.pkg
+          pkgbuild --root work/daemon \
+            --identifier com.109Driver.wirelessUsbocBigsuradapter.Daemon.pkg \
+            --version 1.0 --install-location / --auth root out/daemon.pkg
+          pkgbuild --root work/efifolder \
+            --scripts "Package Source/Scripts/script efifolder" \
+            --identifier com.109Driver.wirelessUsbocBigsuradapter.EFIFOLDER.pkg \
+            --version 1.0 --install-location / --auth root out/efifolder.pkg
+          pkgbuild --nopayload \
+            --scripts "Package Source/Scripts/script uninstall" \
+            --identifier com.109Driver.wirelessUsbocBigsuradapter.uninstall.pkg \
+            --version 1.0 --auth root out/uninstall.pkg
+
+      - name: Build product package
+        run: |
+          set -euo pipefail
+          mkdir -p product
+          cp "Package Source/Resources/Distribution" product/Distribution
+          cp -R "Package Source/Resources/Resources" product/Resources
+          cp out/*.pkg product/
+          cd product
+          productbuild --distribution Distribution --resources Resources \
+            "Wireless USB OC Big Sur Adapter-V17.pkg"
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Wireless-USB-OC-Big-Sur-Adapter-V17
+          path: product/Wireless USB OC Big Sur Adapter-V17.pkg
+          if-no-files-found: error

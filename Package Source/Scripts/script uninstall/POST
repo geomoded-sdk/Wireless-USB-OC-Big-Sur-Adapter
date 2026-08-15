@@ -1,41 +1,22 @@
 #!/bin/bash
-#
-# By chris1111
-# Script remove config Wifi Realtek
-#
-
-arrays=$(/usr/libexec/plistbuddy -c "Print Kernel:Add" /Volumes/ESP/EFI/OC/config.plist |grep -ac Dict)
-index=$((arrays - 1))
-
-if [ $(/usr/libexec/PlistBuddy -c "Print :Kernel:Add" /Volumes/ESP/EFI/OC/config.plist | grep -c "RtWlanU.kext") -gt 0 ]; then
-	while [ $index -ge 0 ]; do
-		if [[ $(/usr/libexec/PlistBuddy -c "Print ':Kernel:Add:$index'" /Volumes/ESP/EFI/OC/config.plist | grep -ac "RtWlanU.kext" ) -eq 1 ]]; then
-			/usr/libexec/plistbuddy -c "Delete ':Kernel:Add:$index'" /Volumes/ESP/EFI/OC/config.plist
-			index=$((index - 1))
-		else
-			index=$((index - 1))
-		fi
-	done
-	echo " "
-	echo "Removed RtWlanU.kext in /Volumes/ESP/EFI/OC/config.plist"
+# Remove RtWlanU.kext / RtWlanU1827.kext entries from the ESP config.plist
+# Runs from the Uninstaller component scripts directory (after ./MountESP)
+if [ -f /Volumes/ESP/EFI/OC/config.plist ]; then
+    count=$(/usr/libexec/PlistBuddy -c "Print :Kernel:Add" /Volumes/ESP/EFI/OC/config.plist 2>/dev/null | grep -c "RtWlanU")
+    if [ "$count" -gt 0 ]; then
+        arrays=$(/usr/libexec/PlistBuddy -c "Print Kernel:Add" /Volumes/ESP/EFI/OC/config.plist 2>/dev/null | grep -ac Dict)
+        index=$((arrays - 1))
+        while [ $index -ge 0 ]; do
+            if [[ $(/usr/libexec/PlistBuddy -c "Print ':Kernel:Add:$index'" /Volumes/ESP/EFI/OC/config.plist 2>/dev/null | grep -ac "RtWlanU") -eq 1 ]]; then
+                /usr/libexec/PlistBuddy -c "Delete ':Kernel:Add:$index'" /Volumes/ESP/EFI/OC/config.plist 2>/dev/null
+            fi
+            index=$((index - 1))
+        done
+        echo "Removed RtWlanU.kext / RtWlanU1827.kext in /Volumes/ESP/EFI/OC/config.plist"
+    else
+        echo "No RtWlanU entries found in /Volumes/ESP/EFI/OC/config.plist"
+    fi
+else
+    echo "config.plist not found in /Volumes/ESP/EFI/OC/"
 fi
-
-
-arrays=$(/usr/libexec/plistbuddy -c "Print Kernel:Add" /Volumes/ESP/EFI/OC/config.plist |grep -ac Dict)
-index=$((arrays - 1))
-
-if [ $(/usr/libexec/PlistBuddy -c "Print :Kernel:Add" /Volumes/ESP/EFI/OC/config.plist | grep -c "RtWlanU1827.kext") -gt 0 ]; then
-	while [ $index -ge 0 ]; do
-		if [[ $(/usr/libexec/PlistBuddy -c "Print ':Kernel:Add:$index'" /Volumes/ESP/EFI/OC/config.plist | grep -ac "RtWlanU1827.kext" ) -eq 1 ]]; then
-			/usr/libexec/plistbuddy -c "Delete ':Kernel:Add:$index'" /Volumes/ESP/EFI/OC/config.plist
-			index=$((index - 1))
-		else
-			index=$((index - 1))
-		fi
-	done
-	echo " "
-	echo "Removed RtWlanU1827.kext Kext in /Volumes/ESP/EFI/OC/config.plist"
-fi
-
-
 exit 0
