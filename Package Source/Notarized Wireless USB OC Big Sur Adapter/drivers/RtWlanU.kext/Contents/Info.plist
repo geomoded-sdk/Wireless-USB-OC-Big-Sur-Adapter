@@ -3605,6 +3605,38 @@
 			<key>idProduct</key>
 			<integer>281</integer>
 		</dict>
+		<key>RTL8811CU_0B2A_1A2B_Clone</key>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string>com.realtek.driver.RtWlanU</string>
+			<key>IOClass</key>
+			<string>RtWlanU</string>
+			<key>IOKitDebug</key>
+			<integer>0</integer>
+			<key>IOProviderClass</key>
+			<string>IOUSBInterface</string>
+			<key>idVendor</key>
+			<integer>2858</integer>
+			<key>bInterfaceNumber</key>
+			<integer>0</integer>
+			<key>idProduct</key>
+			<integer>6699</integer>
+		</dict>
+		<key>RTL_WILDCARD_0B2A_All_CU</key>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string>com.realtek.driver.RtWlanU</string>
+			<key>IOClass</key>
+			<string>RtWlanU</string>
+			<key>IOKitDebug</key>
+			<integer>0</integer>
+			<key>IOProviderClass</key>
+			<string>IOUSBInterface</string>
+			<key>idVendor</key>
+			<integer>2858</integer>
+			<key>bInterfaceNumber</key>
+			<integer>0</integer>
+		</dict>
 	</dict>
 	<key>OSBundleLibraries</key>
 	<dict>
